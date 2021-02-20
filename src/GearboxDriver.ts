@@ -50,17 +50,97 @@ class GearboxDriver {
           if (!(currentGear === this.gearbox.getMaxDrive())) {
             this.gearbox.setCurrentGear(currentGear + 1);
           }
-        // prettier-ignore
         } else if (currentRpm > (<number>this.characteristics[0] * 130) / 100 && this.aggressiveMode === 2) {
-          if(!(currentGear === this.gearbox.getMaxDrive())) {
+          if (!(currentGear === this.gearbox.getMaxDrive())) {
             this.gearbox.setCurrentGear(currentGear + 1);
           }
         } else if (currentRpm > (<number>this.characteristics[0] * 130) / 100 && this.aggressiveMode === 3) {
-            if(!(currentGear === this.gearbox.getMaxDrive())) {
-              this.gearbox.setCurrentGear(currentGear + 1);
+          if (!(currentGear === this.gearbox.getMaxDrive())) {
+            this.gearbox.setCurrentGear(currentGear + 1);
             //   this.soundModule.makeSound(40);
+          }
+        } else if (currentRpm < this.characteristics[1]) {
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+          }
+        }
+        break;
+      }
+
+      case 2: {
+        // prettier-ignore
+        if (currentRpm < this.characteristics[2]) { // czy redukowac bo za male obroty
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+            break;
+          }
+        }
+
+        // prettier-ignore
+        // czy potrzebny nastepny bieg
+        if (threshold < this.characteristics[3] && this.aggressiveMode === 1) {
+          if (currentRpm > this.characteristics[4]) {
+            if (currentGear != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(currentGear + 1);
             }
           }
+        } else if (threshold < this.characteristics[3] && this.aggressiveMode === 2) {
+          if (currentRpm > (<number>this.characteristics[4] * 130) / 100) {
+            if (currentGear != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(currentGear + 1);
+            }
+          }
+        }
+
+        if (threshold < this.characteristics[3] && this.aggressiveMode === 3) {
+          if (currentRpm > (<number>this.characteristics[4] * 130) / 100) {
+            if (currentGear != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(currentGear + 1);
+              //   this.soundModule.makeSound(40);
+            }
+          } else {
+            // kickdown(ale jednak redukcja bo TIR)
+            if (currentRpm < this.characteristics[5]) {
+              // nie sa zbyt wysokie
+              if (currentGear != 1) {
+                this.gearbox.setCurrentGear(currentGear - 1);
+              }
+            }
+          }
+          break;
+        }
+      }
+
+      case 3: {
+        // prettier-ignore
+        if (currentRpm < this.characteristics[6]) { // czy zbyt obroty i trzeba zredukowac
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+            break;
+          }
+        }
+
+        // czy potrzebny nastepny bieg?
+        if (threshold < this.characteristics[7] && this.aggressiveMode === 1) {
+          if (currentRpm > this.characteristics[8]) {
+            if (currentGear != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(currentGear + 1);
+            }
+          }
+        } else if (
+          threshold < this.characteristics[7] &&
+          this.aggressiveMode === 2
+        ) {
+          if (currentRpm > this.characteristics[8] && 130 / 100) {
+            if (currentGear != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(currentGear + 1);
+            }
+          }
+        } else if (
+          threshold < this.characteristics[7] &&
+          this.aggressiveMode === 3
+        ) {
+        }
       }
     }
   }
