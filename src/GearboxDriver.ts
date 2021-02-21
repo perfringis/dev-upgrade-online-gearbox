@@ -8,7 +8,7 @@ class GearboxDriver {
   // prettier-ignore
   private characteristics: Object[] = [2000, 1000, 1000, 0.5, 2500, 4500, 1500, 0.5, 5000, 0.7, 5000, 5000, 1500, 2000, 3000, 6500, 14];
 
-  private gearBoxDriverMode: number; // mode 1-Eco, 2-Comfort, 3-Sport
+  private gearBoxDriverMode!: number; // mode 1-Eco, 2-Comfort, 3-Sport
   private aggressiveMode!: number; // 1-3
 
   public handleGas(threshold: number): void {
@@ -120,6 +120,7 @@ class GearboxDriver {
           }
         }
 
+        // prettier-ignore
         // czy potrzebny nastepny bieg?
         if (threshold < this.characteristics[7] && this.aggressiveMode === 1) {
           if (currentRpm > this.characteristics[8]) {
@@ -127,19 +128,37 @@ class GearboxDriver {
               this.gearbox.setCurrentGear(currentGear + 1);
             }
           }
-        } else if (
-          threshold < this.characteristics[7] &&
-          this.aggressiveMode === 2
-        ) {
+        } else if (threshold < this.characteristics[7] && this.aggressiveMode === 2) {
           if (currentRpm > this.characteristics[8] && 130 / 100) {
             if (currentGear != this.gearbox.getMaxDrive()) {
               this.gearbox.setCurrentGear(currentGear + 1);
             }
           }
-        } else if (
-          threshold < this.characteristics[7] &&
-          this.aggressiveMode === 3
-        ) {
+        } else if (threshold < this.characteristics[7] && this.aggressiveMode === 3) {
+          if (currentRpm > this.characteristics[8] && 130 / 100) {
+            if (currentGear != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(currentGear + 1);
+              //   this.soundModule.makeSound(40);
+            }
+          }
+        } else if (threshold < this.characteristics[9]) {
+          // lekki kickdown
+          if (currentRpm < this.characteristics[10]) {
+            if (currentGear != 1) {
+              this.gearbox.setCurrentGear(currentGear - 1);
+            }
+          }
+        } else {
+          if (currentRpm < this.characteristics[11]) {
+            if (currentGear != 1) {
+              this.gearbox.setCurrentGear(currentGear - 1);
+              if (this.gearbox.getCurrentGear() != 1) {
+                this.gearbox.setCurrentGear(
+                  <number>this.gearbox.getCurrentGear() - 1
+                );
+              }
+            }
+          }
         }
       }
     }
