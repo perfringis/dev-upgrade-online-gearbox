@@ -148,8 +148,8 @@ class GearboxDriver {
               this.gearbox.setCurrentGear(currentGear - 1);
             }
           }
-        } else {
-          if (currentRpm < this.characteristics[11]) {
+        } else { // mocny kickdown - zapierdalamy! - TO JAKO NOWE WYMAGANIE
+          if (currentRpm < this.characteristics[11]) { // nie sa zbyt niskie
             if (currentGear != 1) {
               this.gearbox.setCurrentGear(currentGear - 1);
               if (this.gearbox.getCurrentGear() != 1) {
