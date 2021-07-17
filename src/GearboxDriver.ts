@@ -1,14 +1,21 @@
 import { ExternalSystems } from './ExternalSystems';
 import { Gearbox } from './Gearbox';
+import { SoundModule } from './SoundModule';
 
 class GearboxDriver {
   private externalSystems: ExternalSystems = new ExternalSystems();
   private gearbox: Gearbox = new Gearbox();
+  private soundModule: SoundModule = new SoundModule();
+
+  private ifCaravan!: boolean;
 
   // prettier-ignore
   private characteristics: Object[] = [2000, 1000, 1000, 0.5, 2500, 4500, 1500, 0.5, 5000, 0.7, 5000, 5000, 1500, 2000, 3000, 6500, 14];
 
   private gearBoxDriverMode!: number; // mode 1-Eco, 2-Comfort, 3-Sport
+
+  private isMDynamicMode!: boolean;
+
   private aggressiveMode!: number; // 1-3
 
   public handleGas(threshold: number): void {
@@ -46,6 +53,25 @@ class GearboxDriver {
     switch (this.gearBoxDriverMode) {
       case 1: {
         // prettier-ignore
+        if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() >= 7) {
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+          }
+        }
+
+        // prettier-ignore
+        if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() <= 3) {
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+          }
+        }
+
+        // prettier-ignore
+        if (this.isMDynamicMode && this.externalSystems.getAngularSpeed() > 50) {
+          break;
+        }
+
+        // prettier-ignore
         if (currentRpm > <number>this.characteristics[0] && this.aggressiveMode === 1) {
           if (!(currentGear === this.gearbox.getMaxDrive())) {
             this.gearbox.setCurrentGear(currentGear + 1);
@@ -57,7 +83,7 @@ class GearboxDriver {
         } else if (currentRpm > (<number>this.characteristics[0] * 130) / 100 && this.aggressiveMode === 3) {
           if (!(currentGear === this.gearbox.getMaxDrive())) {
             this.gearbox.setCurrentGear(currentGear + 1);
-            //   this.soundModule.makeSound(40);
+              this.soundModule.makeSound(40);
           }
         } else if (currentRpm < this.characteristics[1]) {
           if (currentGear != 1) {
@@ -68,6 +94,25 @@ class GearboxDriver {
       }
 
       case 2: {
+        // prettier-ignore
+        if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() >= 7) {
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+          }
+        }
+
+        // prettier-ignore
+        if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() <= 3) {
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+          }
+        }
+
+        // prettier-ignore
+        if (this.isMDynamicMode && this.externalSystems.getAngularSpeed() > 50) {
+                  break;
+        }
+
         // prettier-ignore
         if (currentRpm < this.characteristics[2]) { // czy redukowac bo za male obroty
           if (currentGear != 1) {
@@ -96,7 +141,7 @@ class GearboxDriver {
           if (currentRpm > (<number>this.characteristics[4] * 130) / 100) {
             if (currentGear != this.gearbox.getMaxDrive()) {
               this.gearbox.setCurrentGear(currentGear + 1);
-              //   this.soundModule.makeSound(40);
+              this.soundModule.makeSound(40);
             }
           } else {
             // kickdown(ale jednak redukcja bo TIR)
@@ -112,6 +157,25 @@ class GearboxDriver {
       }
 
       case 3: {
+        // prettier-ignore
+        if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() >= 7) {
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+          }
+        }
+
+        // prettier-ignore
+        if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() <= 3) {
+          if (currentGear != 1) {
+            this.gearbox.setCurrentGear(currentGear - 1);
+          }
+        }
+
+        // prettier-ignore
+        if (this.isMDynamicMode && this.externalSystems.getAngularSpeed() > 50) {
+                  break;
+        }
+
         // prettier-ignore
         if (currentRpm < this.characteristics[6]) { // czy zbyt obroty i trzeba zredukowac
           if (currentGear != 1) {
@@ -138,7 +202,7 @@ class GearboxDriver {
           if (currentRpm > this.characteristics[8] && 130 / 100) {
             if (currentGear != this.gearbox.getMaxDrive()) {
               this.gearbox.setCurrentGear(currentGear + 1);
-              //   this.soundModule.makeSound(40);
+                this.soundModule.makeSound(40);
             }
           }
         } else if (threshold < this.characteristics[9]) {
