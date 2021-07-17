@@ -2,9 +2,9 @@ import { ExternalSystems } from './ExternalSystems';
 import { Gearbox } from './Gearbox';
 import { SoundModule } from './SoundModule';
 
-class GearboxDriver {
+export class GearboxDriver {
   private externalSystems: ExternalSystems = new ExternalSystems();
-  private gearbox: Gearbox = new Gearbox();
+  private gearbox!: Gearbox;
   private soundModule: SoundModule = new SoundModule();
 
   private ifCaravan!: boolean;
@@ -226,5 +226,13 @@ class GearboxDriver {
         }
       }
     }
+  }
+
+  public setGearBox(gearbox: Gearbox): void {
+    this.gearbox = gearbox;
+  }
+
+  public setIfCaravan(ifCaravan: boolean): void {
+    this.ifCaravan = ifCaravan;
   }
 }

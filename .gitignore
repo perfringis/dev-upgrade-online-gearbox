@@ -6,3 +6,4 @@ package-lock.json
 dist
 *.js
 yarn.lock
+coverage
