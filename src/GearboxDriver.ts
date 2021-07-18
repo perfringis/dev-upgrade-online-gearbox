@@ -10,7 +10,7 @@ export class GearboxDriver {
   private ifCaravan!: boolean;
 
   // prettier-ignore
-  private characteristics: Object[] = [2000, 1000, 1000, 0.5, 2500, 4500, 1500, 0.5, 5000, 0.7, 5000, 5000, 1500, 2000, 3000, 6500, 14];
+  private characteristics: number[] = [2000, 1000, 1000, 0.5, 2500, 4500, 1500, 0.5, 5000, 0.7, 5000, 5000, 1500, 2000, 3000, 6500, 14];
 
   private gearBoxDriverMode!: number; // mode 1-Eco, 2-Comfort, 3-Sport
 
@@ -42,27 +42,24 @@ export class GearboxDriver {
       throw new Error();
     }
 
-    const currentGear: number = <number>this.gearbox.getCurrentGear();
     // prettier-ignore
-    if (currentGear === 0) { // mozna dopisac
+    if (<number>this.gearbox.getCurrentGear() === 0) { // mozna dopisac
       throw new Error();
     }
-
-    const currentRpm: number = this.externalSystems.getCurrentRpm();
 
     switch (this.gearBoxDriverMode) {
       case 1: {
         // prettier-ignore
         if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() >= 7) {
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
           }
         }
 
         // prettier-ignore
         if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() <= 3) {
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
           }
         }
 
@@ -72,39 +69,40 @@ export class GearboxDriver {
         }
 
         // prettier-ignore
-        if (currentRpm > <number>this.characteristics[0] && this.aggressiveMode === 1) {
-          if (!(currentGear === this.gearbox.getMaxDrive())) {
-            this.gearbox.setCurrentGear(currentGear + 1);
+        if (this.externalSystems.getCurrentRpm() > <number>this.characteristics[0] && this.aggressiveMode === 1) {
+          if (!(<number>this.gearbox.getCurrentGear() === this.gearbox.getMaxDrive())) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
           }
-        } else if (currentRpm > (<number>this.characteristics[0] * 130) / 100 && this.aggressiveMode === 2) {
-          if (!(currentGear === this.gearbox.getMaxDrive())) {
-            this.gearbox.setCurrentGear(currentGear + 1);
+        } else if (this.externalSystems.getCurrentRpm() > (<number>this.characteristics[0] * 130) / 100 && this.aggressiveMode === 2) {
+          if (!(<number>this.gearbox.getCurrentGear() === this.gearbox.getMaxDrive())) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
           }
-        } else if (currentRpm > (<number>this.characteristics[0] * 130) / 100 && this.aggressiveMode === 3) {
-          if (!(currentGear === this.gearbox.getMaxDrive())) {
-            this.gearbox.setCurrentGear(currentGear + 1);
+        } else if (this.externalSystems.getCurrentRpm() > (<number>this.characteristics[0] * 130) / 100 && this.aggressiveMode === 3) {
+          if (!(<number>this.gearbox.getCurrentGear() === this.gearbox.getMaxDrive())) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
               this.soundModule.makeSound(40);
           }
-        } else if (currentRpm < this.characteristics[1]) {
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+        } else if (this.externalSystems.getCurrentRpm() < this.characteristics[1]) {
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
           }
         }
+
         break;
       }
 
       case 2: {
         // prettier-ignore
         if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() >= 7) {
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
           }
         }
 
         // prettier-ignore
         if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() <= 3) {
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
           }
         }
 
@@ -114,9 +112,9 @@ export class GearboxDriver {
         }
 
         // prettier-ignore
-        if (currentRpm < this.characteristics[2]) { // czy redukowac bo za male obroty
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+        if (this.externalSystems.getCurrentRpm() < this.characteristics[2]) { // czy redukowac bo za male obroty
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
             break;
           }
         }
@@ -124,31 +122,31 @@ export class GearboxDriver {
         // prettier-ignore
         // czy potrzebny nastepny bieg
         if (threshold < this.characteristics[3] && this.aggressiveMode === 1) {
-          if (currentRpm > this.characteristics[4]) {
-            if (currentGear != this.gearbox.getMaxDrive()) {
-              this.gearbox.setCurrentGear(currentGear + 1);
+          if (this.externalSystems.getCurrentRpm() > this.characteristics[4]) {
+            if (<number>this.gearbox.getCurrentGear() != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
             }
           }
         } else if (threshold < this.characteristics[3] && this.aggressiveMode === 2) {
-          if (currentRpm > (<number>this.characteristics[4] * 130) / 100) {
-            if (currentGear != this.gearbox.getMaxDrive()) {
-              this.gearbox.setCurrentGear(currentGear + 1);
+          if (this.externalSystems.getCurrentRpm() > (<number>this.characteristics[4] * 130) / 100) {
+            if (<number>this.gearbox.getCurrentGear() != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
             }
           }
         }
 
         if (threshold < this.characteristics[3] && this.aggressiveMode === 3) {
-          if (currentRpm > (<number>this.characteristics[4] * 130) / 100) {
-            if (currentGear != this.gearbox.getMaxDrive()) {
-              this.gearbox.setCurrentGear(currentGear + 1);
+          if (this.externalSystems.getCurrentRpm() > (<number>this.characteristics[4] * 130) / 100) {
+            if (<number>this.gearbox.getCurrentGear() != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
               this.soundModule.makeSound(40);
             }
           } else {
             // kickdown(ale jednak redukcja bo TIR)
-            if (currentRpm < this.characteristics[5]) {
+            if (this.externalSystems.getCurrentRpm() < this.characteristics[5]) {
               // nie sa zbyt wysokie
-              if (currentGear != 1) {
-                this.gearbox.setCurrentGear(currentGear - 1);
+              if (<number>this.gearbox.getCurrentGear() != 1) {
+                this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
               }
             }
           }
@@ -159,15 +157,15 @@ export class GearboxDriver {
       case 3: {
         // prettier-ignore
         if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() >= 7) {
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
           }
         }
 
         // prettier-ignore
         if (this.ifCaravan && this.externalSystems.getLights().getLightsPosition() != null && this.externalSystems.getLights().getLightsPosition() <= 3) {
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
           }
         }
 
@@ -177,9 +175,9 @@ export class GearboxDriver {
         }
 
         // prettier-ignore
-        if (currentRpm < this.characteristics[6]) { // czy zbyt obroty i trzeba zredukowac
-          if (currentGear != 1) {
-            this.gearbox.setCurrentGear(currentGear - 1);
+        if (this.externalSystems.getCurrentRpm() < this.characteristics[6]) { // czy zbyt obroty i trzeba zredukowac
+          if (<number>this.gearbox.getCurrentGear() != 1) {
+            this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
             break;
           }
         }
@@ -187,35 +185,35 @@ export class GearboxDriver {
         // prettier-ignore
         // czy potrzebny nastepny bieg?
         if (threshold < this.characteristics[7] && this.aggressiveMode === 1) {
-          if (currentRpm > this.characteristics[8]) {
-            if (currentGear != this.gearbox.getMaxDrive()) {
-              this.gearbox.setCurrentGear(currentGear + 1);
+          if (this.externalSystems.getCurrentRpm() > this.characteristics[8]) {
+            if (<number>this.gearbox.getCurrentGear() != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
             }
           }
         } else if (threshold < this.characteristics[7] && this.aggressiveMode === 2) {
-          if (currentRpm > this.characteristics[8] && 130 / 100) {
-            if (currentGear != this.gearbox.getMaxDrive()) {
-              this.gearbox.setCurrentGear(currentGear + 1);
+          if (this.externalSystems.getCurrentRpm() > this.characteristics[8] && 130 / 100) {
+            if (<number>this.gearbox.getCurrentGear() != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
             }
           }
         } else if (threshold < this.characteristics[7] && this.aggressiveMode === 3) {
-          if (currentRpm > this.characteristics[8] && 130 / 100) {
-            if (currentGear != this.gearbox.getMaxDrive()) {
-              this.gearbox.setCurrentGear(currentGear + 1);
+          if (this.externalSystems.getCurrentRpm() > this.characteristics[8] && 130 / 100) {
+            if (<number>this.gearbox.getCurrentGear() != this.gearbox.getMaxDrive()) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() + 1);
                 this.soundModule.makeSound(40);
             }
           }
         } else if (threshold < this.characteristics[9]) {
           // lekki kickdown
-          if (currentRpm < this.characteristics[10]) {
-            if (currentGear != 1) {
-              this.gearbox.setCurrentGear(currentGear - 1);
+          if (this.externalSystems.getCurrentRpm() < this.characteristics[10]) {
+            if (<number>this.gearbox.getCurrentGear() != 1) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
             }
           }
         } else { // mocny kickdown - zapierdalamy! - TO JAKO NOWE WYMAGANIE
-          if (currentRpm < this.characteristics[11]) { // nie sa zbyt niskie
-            if (currentGear != 1) {
-              this.gearbox.setCurrentGear(currentGear - 1);
+          if (this.externalSystems.getCurrentRpm() < this.characteristics[11]) { // nie sa zbyt niskie
+            if (<number>this.gearbox.getCurrentGear() != 1) {
+              this.gearbox.setCurrentGear(<number>this.gearbox.getCurrentGear() - 1);
               if (this.gearbox.getCurrentGear() != 1) {
                 this.gearbox.setCurrentGear(
                   <number>this.gearbox.getCurrentGear() - 1
