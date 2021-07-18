@@ -1,0 +1,1 @@
+describe('Test Gear class', () => {});
