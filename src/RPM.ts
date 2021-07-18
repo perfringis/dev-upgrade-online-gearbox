@@ -1,3 +1,5 @@
+import { RpmRange } from './RpmRange';
+
 export class RPM {
   private rpm: number;
 
@@ -33,5 +35,13 @@ export class RPM {
     } else {
       return 0;
     }
+  }
+
+  public isBelow(optimalRange: RpmRange): boolean {
+    return optimalRange.startGreaterThan(this);
+  }
+
+  public isAbove(optimalRange: RpmRange): boolean {
+    return optimalRange.endSmallerThan(this);
   }
 }

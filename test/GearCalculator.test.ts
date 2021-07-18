@@ -1,13 +1,17 @@
 import { Gear } from '../src/Gear';
 import { GearCalculator } from '../src/GearCalculator';
 import { RPM } from '../src/RPM';
+import { RpmRange } from '../src/RpmRange';
 
 describe('Test GearCalculator class', () => {
-  const calculator: GearCalculator = new GearCalculator(RPM.k(2), RPM.k(3), new Gear(8));
+  const calculator: GearCalculator = new GearCalculator(
+    new RpmRange(RPM.k(2), RPM.k(3)),
+    new Gear(8)
+  );
 
   test('should shift up when above max RPM', () => {
     const nextGear: Gear = calculator.calculate(RPM.rpm(3300), new Gear(6));
-
+    console.log(nextGear);
     expect(new Gear(7)).toEqual(nextGear);
   });
 
