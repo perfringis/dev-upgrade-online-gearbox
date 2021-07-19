@@ -18,4 +18,13 @@ describe('Test Gear class', () => {
     expect(new Gear(3)).toEqual(new Gear(4).previous());
     expect(new Gear(2)).toEqual(new Gear(3).previous());
   });
+
+  test('should be greater than given gear', () => {
+    expect(new Gear(2).greaterThan(new Gear(1))).toEqual(true);
+  });
+
+  test('should be less or equal to given gear', () => {
+    expect(new Gear(1).lowerOrEqualTo(new Gear(2))).toEqual(true);
+    expect(new Gear(1).lowerOrEqualTo(new Gear(1))).toEqual(true);
+  });
 });

@@ -1,29 +1,24 @@
 import { Gear } from './Gear';
+import { GearRange } from './GearRange';
 import { RPM } from './RPM';
 import { RpmRange } from './RpmRange';
 
 export class GearCalculator {
   private optimalRange: RpmRange;
-  private maxDrive: Gear;
+  private gearRange: GearRange;
 
-  constructor(optimalRange: RpmRange, maxDrive: Gear) {
+  constructor(optimalRange: RpmRange, gearRange: GearRange) {
     this.optimalRange = optimalRange;
-    this.maxDrive = maxDrive;
+    this.gearRange = gearRange;
   }
 
-  calculate(currentRpm: RPM, currentGear: Gear): Gear {
+  calculateGear(currentRpm: RPM, currentGear: Gear): Gear {
     if (currentRpm.isAbove(this.optimalRange)) {
-      if (currentGear.equals(this.maxDrive)) {
-        return currentGear;
-      }
-      return currentGear.next();
+      return this.gearRange.next(currentGear);
     }
 
     if (currentRpm.isBelow(this.optimalRange)) {
-      if (currentGear.equals(new Gear(1))) {
-        return currentGear;
-      }
-      return currentGear.previous();
+      return this.gearRange.previous(currentGear);
     }
 
     return currentGear;

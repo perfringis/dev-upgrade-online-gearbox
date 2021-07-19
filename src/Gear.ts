@@ -9,15 +9,23 @@ export class Gear {
     this.gear = gear;
   }
 
-  public equals(otherGear: Gear) {
-    return this.gear === otherGear.gear;
-  }
-
-  public next(): Gear {
+  next(): Gear {
     return new Gear(this.gear + 1);
   }
 
-  public previous(): Gear {
+  previous(): Gear {
     return new Gear(this.gear - 1);
+  }
+
+  equals(otherGear: Gear): boolean {
+    return this.gear === otherGear.gear;
+  }
+
+  greaterThan(gear: Gear): boolean {
+    return this.gear > gear.gear;
+  }
+
+  lowerOrEqualTo(gear: Gear): boolean {
+    return this.gear <= gear.gear;
   }
 }
