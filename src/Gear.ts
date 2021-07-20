@@ -28,4 +28,8 @@ export class Gear {
   lowerOrEqualTo(gear: Gear): boolean {
     return this.gear <= gear.gear;
   }
+
+  toIntValue(): number {
+    return this.gear;
+  }
 }
