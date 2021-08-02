@@ -15,4 +15,12 @@ export class GearboxACL {
   currentGear(): Gear {
     return new Gear(<number>this.gearbox.getCurrentGear());
   }
+
+  firstGear(): Gear {
+    return new Gear(1);
+  }
+
+  maxGear(): Gear {
+    return new Gear(this.gearbox.getMaxDrive());
+  }
 }

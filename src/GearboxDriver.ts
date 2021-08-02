@@ -1,32 +1,81 @@
+import { Characteristics } from './Characteristics';
+import { ComfortCalculator } from './ComfortCalculator';
+import { DriveMode } from './DriveMode';
 import { DriveState } from './DriveState';
+import { EcoCalculator } from './EcoCalculator';
 import { Gear } from './Gear';
 import { GearboxACL } from './GearboxACL';
 import { GearCalculator } from './GearCalculator';
+import { GearRange } from './GearRange';
 import { RpmProvider } from './RpmProvider';
+import { SportCalculator } from './SportCalculator';
 
 export class GearboxDriver {
   private rpmProvider: RpmProvider;
-  private gearbox: GearboxACL;
-  private gearCalculator: GearCalculator;
+  private gearboxACL: GearboxACL;
+  private characteristics: Characteristics;
   private state: DriveState = DriveState.Park;
+  private driveMode: DriveMode = DriveMode.Comfort;
 
   constructor(
     rpmProvider: RpmProvider,
-    gearbox: GearboxACL,
-    gearCalculator: GearCalculator
+    gearboxACL: GearboxACL,
+    characteristics: Characteristics
   ) {
     this.rpmProvider = rpmProvider;
-    this.gearbox = gearbox;
-    this.gearCalculator = gearCalculator;
+    this.gearboxACL = gearboxACL;
+    this.characteristics = characteristics;
   }
 
-  calculate(): void {
+  recalculate(): void {
     if (this.state === DriveState.Drive) {
-      const newGear: Gear = this.gearCalculator.calculateGear(
+      const gearCalculator: GearCalculator = this.chooseCalculator();
+      const newGear: Gear = gearCalculator.calculateGear(
         this.rpmProvider.current(),
-        this.gearbox.currentGear()
+        this.gearboxACL.currentGear()
       );
-      this.gearbox.changeGearTo(newGear);
+
+      this.gearboxACL.changeGearTo(newGear);
     }
+  }
+
+  enableDrive(): void {
+    this.state = DriveState.Drive;
+  }
+
+  enablePark(): void {
+    this.state = DriveState.Park;
+  }
+
+  enableReverse(): void {
+    this.state = DriveState.Reverse;
+  }
+
+  chooseCalculator(): GearCalculator {
+    if (this.driveMode === DriveMode.Eco) {
+      return new EcoCalculator(
+        this.characteristics.optimalEcoRpmRange(),
+        new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
+      );
+    }
+
+    if (this.driveMode === DriveMode.Comfort) {
+      return new ComfortCalculator(
+        this.characteristics.optimalComfortRpmRange(),
+        new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
+      );
+    }
+
+    if (this.driveMode === DriveMode.Sport) {
+      return new SportCalculator(
+        this.characteristics.optimalSportRpmRange(),
+        new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
+      );
+    }
+
+    return new ComfortCalculator(
+      this.characteristics.optimalComfortRpmRange(),
+      new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
+    );
   }
 }

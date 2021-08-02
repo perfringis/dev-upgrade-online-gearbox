@@ -7,7 +7,21 @@ export class Characteristics {
     2000, 3000, 6500, 14,
   ];
 
-  optimalRpmRange(): RpmRange {
+  optimalEcoRpmRange(): RpmRange {
+    return new RpmRange(
+      RPM.k(this.characteristics[1]),
+      RPM.k(this.characteristics[4])
+    );
+  }
+
+  optimalComfortRpmRange(): RpmRange {
+    return new RpmRange(
+      RPM.k(this.characteristics[1]),
+      RPM.k(this.characteristics[4])
+    );
+  }
+
+  optimalSportRpmRange(): RpmRange {
     return new RpmRange(
       RPM.k(this.characteristics[1]),
       RPM.k(this.characteristics[4])
