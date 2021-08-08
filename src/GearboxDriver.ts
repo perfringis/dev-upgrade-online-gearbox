@@ -1,35 +1,29 @@
-import { Characteristics } from './Characteristics';
-import { ComfortCalculator } from './ComfortCalculator';
-import { DriveMode } from './DriveMode';
 import { DriveState } from './DriveState';
-import { EcoCalculator } from './EcoCalculator';
 import { Gear } from './Gear';
 import { GearboxACL } from './GearboxACL';
 import { GearCalculator } from './GearCalculator';
-import { GearRange } from './GearRange';
+import { GearCalculators } from './GearCalculators';
 import { RpmProvider } from './RpmProvider';
-import { SportCalculator } from './SportCalculator';
 
 export class GearboxDriver {
   private rpmProvider: RpmProvider;
   private gearboxACL: GearboxACL;
-  private characteristics: Characteristics;
+  private gearCalculators: GearCalculators;
   private state: DriveState = DriveState.Park;
-  private driveMode: DriveMode = DriveMode.Comfort;
 
   constructor(
     rpmProvider: RpmProvider,
     gearboxACL: GearboxACL,
-    characteristics: Characteristics
+    gearCalculators: GearCalculators
   ) {
     this.rpmProvider = rpmProvider;
     this.gearboxACL = gearboxACL;
-    this.characteristics = characteristics;
+    this.gearCalculators = gearCalculators;
   }
 
   recalculate(): void {
     if (this.state === DriveState.Drive) {
-      const gearCalculator: GearCalculator = this.chooseCalculator();
+      const gearCalculator: GearCalculator = this.gearCalculators.choose();
       const newGear: Gear = gearCalculator.calculateGear(
         this.rpmProvider.current(),
         this.gearboxACL.currentGear()
@@ -51,31 +45,7 @@ export class GearboxDriver {
     this.state = DriveState.Reverse;
   }
 
-  chooseCalculator(): GearCalculator {
-    if (this.driveMode === DriveMode.Eco) {
-      return new EcoCalculator(
-        this.characteristics.optimalEcoRpmRange(),
-        new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
-      );
-    }
-
-    if (this.driveMode === DriveMode.Comfort) {
-      return new ComfortCalculator(
-        this.characteristics.optimalComfortRpmRange(),
-        new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
-      );
-    }
-
-    if (this.driveMode === DriveMode.Sport) {
-      return new SportCalculator(
-        this.characteristics.optimalSportRpmRange(),
-        new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
-      );
-    }
-
-    return new ComfortCalculator(
-      this.characteristics.optimalComfortRpmRange(),
-      new GearRange(this.gearboxACL.firstGear(), this.gearboxACL.maxGear())
-    );
+  enableNeutral(): void {
+    this.state = DriveState.Neutral;
   }
 }
