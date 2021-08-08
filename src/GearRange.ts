@@ -1,4 +1,3 @@
-import { threadId } from 'worker_threads';
 import { Gear } from './Gear';
 
 export class GearRange {

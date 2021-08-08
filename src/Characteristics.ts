@@ -16,8 +16,8 @@ export class Characteristics {
 
   optimalComfortRpmRange(): RpmRange {
     return new RpmRange(
-      RPM.k(this.characteristics[1]),
-      RPM.k(this.characteristics[4])
+      RPM.k(this.characteristics[0]),
+      RPM.k(this.characteristics[14])
     );
   }
 
