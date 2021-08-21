@@ -44,4 +44,20 @@ export class RPM {
   public isAbove(optimalRange: RpmRange): boolean {
     return optimalRange.endSmallerThan(this);
   }
+
+  scale(ratio: number): RPM {
+    return new RPM(this.rpm * ratio);
+  }
+
+  add(toAdd: RPM): RPM {
+    return new RPM(this.rpm * toAdd.rpm);
+  }
+
+  minus(subtract: RPM) {
+    return new RPM(this.rpm - subtract.rpm);
+  }
+
+  divideBy(divider: number) {
+    return new RPM(this.rpm / divider);
+  }
 }

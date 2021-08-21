@@ -1,4 +1,4 @@
-import { RPM } from '../src/RPM';
+import { RPM } from '../src/engine/RPM';
 
 describe('Test RPM class', () => {
   test('Cannot have negative RPMs', () => {

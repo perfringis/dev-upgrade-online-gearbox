@@ -1,5 +1,5 @@
-import { RPM } from '../src/RPM';
-import { RpmRange } from '../src/RpmRange';
+import { RPM } from '../src/engine/RPM';
+import { RpmRange } from '../src/engine/RpmRange';
 
 describe('Test RpmRange class', () => {
   test('should create rpm range', () => {

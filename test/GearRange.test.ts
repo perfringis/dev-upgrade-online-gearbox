@@ -1,5 +1,5 @@
-import { Gear } from '../src/Gear';
-import { GearRange } from '../src/GearRange';
+import { Gear } from '../src/driver/Gear';
+import { GearRange } from '../src/driver/GearRange';
 
 describe('Test GearRange class', () => {
   const gearRange: GearRange = new GearRange(new Gear(1), new Gear(6));

@@ -1,4 +1,4 @@
-import { Gear } from './Gear';
+import { Gear } from '../../driver/Gear';
 import { Gearbox } from './Gearbox';
 
 export class GearboxACL {

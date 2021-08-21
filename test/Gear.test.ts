@@ -1,4 +1,4 @@
-import { Gear } from '../src/Gear';
+import { Gear } from '../src/driver/Gear';
 
 describe('Test Gear class', () => {
   test('cannot have gear with negative representation', () => {
