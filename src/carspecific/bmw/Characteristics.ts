@@ -21,14 +21,14 @@ export class Characteristics {
     );
   }
 
-  angularSpeedForDrifting(): number {
-    return this.characteristics[16];
-  }
-
   optimalSportRpmRange(): RpmRange {
     return RpmRange.of(
       RPM.k(this.characteristics[14]),
       RPM.k(this.characteristics[15])
     );
+  }
+
+  angularSpeedForDrifting(): number {
+    return this.characteristics[16];
   }
 }
